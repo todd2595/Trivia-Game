@@ -1,0 +1,16 @@
+.background {
+    background-image: url(./images/bg.jpg);
+    text-align: center;
+}
+#space {
+    background-color: snow;
+    width: 70%;
+}
+h1 {
+    font-family: monospace;
+    font-variant: small-caps;
+}
+p {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+}

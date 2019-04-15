@@ -22,9 +22,9 @@ $(document).ready(function () {
   var questionsCorr = 0;
   var questionAns = 0;
   var questionsWrg = 0;
-  
+  var timer;
   var sixerSong = document.createElement("audio");
-  sixerSong.setAttribute("src", "Assets\Audio\sixers.mp3");
+  sixerSong.setAttribute("src", "Assets/Audio/sixers.mp3");
   $(".theme-button").on("click", function () {
     sixerSong.play();
   });
@@ -32,51 +32,55 @@ $(document).ready(function () {
     sixerSong.pause();
   });
 
-  for (var i = 0; i < questions.length; i++) {
-    // //   for(var j = 0; j < questions[i].choices.length; j++){
-    // var options = questions[i];
-    // //       // options.choices.forEach(){
-    questions[i].choices.forEach(function () {
-      var options = $("<button>");
-      options.addClass("letter-button letter letter-button-color");
-      options.attr("data-letter", questions[i].choices);
-      options.text(questions[i].choices);
-      $("#options").append(options);
-    });
-    $("#questions").append(questions[i].prompt);
-  }
+  $("#start").on("click", run);
+
+  function run() {
+    // clearInterval(countingId);
+    // countingId = setInterval(decrement, 1000);
+    timer = setInterval(timeLeft, 1000);
+    for (var i = 0; i < questions.length; i++) {
+      var questionshtml = "<h1>" + questions[i].prompt + "</h1>";
+      var choiceshtml = 
+        `<input type='radio' class="question-0" value="0" name="${i}"><p>${questions[i].choices[0]}</p>
+        <input type='radio' class="question-0" value="1" name="${i}"><p>${questions[i].choices[1]}</p>
+        <input type='radio' class="question-0" value="2" name="${i}"><p>${questions[i].choices[2]}</p>
+        <input type='radio' class="question-0" value="3" name="${i}"><p>${questions[i].choices[3]}</p>`;
+      $("#questions").append(questionshtml + choiceshtml);
+    }
   
-$("#Start").on("click", run());
-hide();
-function run() {
-  clearInterval(countingId);
-  countingId = setInterval(decrement, 1000);
-  $("#questions").style.display("");
+  }
+  $("#sumbit").on("click", checkAns)
 
-}
-function decrement() {
-  count--;
-  $("#time-left").html("<h1>" + count + "</h1>");
-  if (count === 0) {
-    sumbit();
-    alert("Times up!")
+  function timeLeft() {
+    count--
+    $("#time-left").html(count)
+    if (count === 0) {
+      checkAns();
+      clearInterval(timer);
+      alert("Times up!")
+    }
+
   }
-  function hide(){
-    $("#questions").style.display("none");
-  }
+// function clearBox (quest){
+//   document.getElementById(quest).html("");
+// }
   
+  function checkAns(){
+    clearInterval(timer);
+    // clearBox();
+    for(i=0; i < questions.length; i++ ){
+      if($(`input[name="${i}"]:checked`).val() == questions[i].answer){
+        questionsCorr++;
+      }
+      else {
+        questionsWrg++;
+      }
+    }
+    $("#questions").html("");
+    $("#questions").prepend("you got " + questionsCorr + " out of 3")
+    // $(".results").html("you got " + questionsCorr + "out of 3")
+    console.log(questionAns);
+    console.log(questionsWrg);
+  }
 
-  $("#time-left").html("<h2>" + count + "</h2>");
-
-// //$("#sumbit").on("click", sumbit)
-
-
-// function checkAns(){
-//   if(slectedAns == correctAns){
-//     ++questionsCorr;
-//     ++questionAns;
-//     ++score;
-//   } else if (selectedAns !== correctAns){
-//     ++questionAns;
-//     ++questionsWrg;
-}});
+  });
